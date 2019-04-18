@@ -1,0 +1,13 @@
+tr{
+    background-color:lightgray;
+}
+th{
+      background-color : white;        
+}
+tr.international {
+    background-color:lightslategray;
+}
+div.card-header{
+    background-color : #3b5998;
+    color: white
+    }

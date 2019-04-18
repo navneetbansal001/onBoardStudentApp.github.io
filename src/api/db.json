@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "firstName": "navneet",
+      "lastName": "bansal",
+      "email": "navi@gmail.com",
+      "phone": "98989898",
+      "age": 25,
+      "password": "12341234",
+      "id": 1
+    }
+  ],
+  "students": [
+    {
+      "onBoardNumber": "3145345",
+      "name": "Navneet Bansal",
+      "category": "international",
+      "domicile": true,
+      "birthCertificate": true,
+      "markSheets": true,
+      "policeClearance": true,
+      "passport": true,
+      "declaration": true,
+      "dateOfBirth": "2019-04-04",
+      "fatherName": "Birbal",
+      "motherName": "Saroj",
+      "lastClassScore": 76,
+      "id": 3
+    }
+  ]
+}
