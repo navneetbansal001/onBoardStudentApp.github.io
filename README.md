@@ -1,2 +1,0 @@
-# onBoardStudentApp.github.io
-onBoardStudentApp
