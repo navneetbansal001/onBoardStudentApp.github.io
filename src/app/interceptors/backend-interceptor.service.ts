@@ -1,3 +1,4 @@
+import { logging } from 'protractor';
 import { User } from 'src/app/models/User';
 import { environment } from './../../environments/environment';
 import { UserService } from './../services/user.service';
@@ -32,6 +33,11 @@ export class BackendInterceptorService implements HttpInterceptor {
 
         let loginEmail = request.params.get("email");
         let loginPassword = request.params.get("password");
+        
+        let filteredUser = users.filter(user => {
+                    return user.username === loginEmail && user.password === loginPassword;
+                });
+
 
         request = request.clone({
           url: `${environment.apiUrl}/users`
@@ -50,30 +56,6 @@ export class BackendInterceptorService implements HttpInterceptor {
           }
           return event;
         }));
-
-        // return next.handle(request).do((event: HttpEvent<any>) => {
-        //   if (event instanceof HttpResponse) {
-        //     if (event.body.length) {
-        //       let responsebody = {
-        //         id: event.body.entries().next().value[1].id,
-        //         email: event.body.entries().next().value[1].email,
-        //         firstName: event.body.entries().next().value[1].firstName,
-        //         lastName: event.body.entries().next().value[1].lastName,
-        //         token: 'fake-jwt-token'
-        //       };
-        //       event = event.clone({ body: responsebody}); 
-        //       return event;
-        //     }
-        //     else {
-        //       return throwError({ error: { message: 'email "' + loginEmail + '" or "' + loginPassword + '" is incorrect ' } });
-        //     }
-        //   }
-        // }, (err: any) => {
-        //   if (err instanceof HttpErrorResponse) {
-        //     return throwError({ error: { message: 'email "' + loginEmail + '" or "' + loginPassword + '" is incorrect ' } });
-        //   }
-        // });
-
       }
 
       // register user
@@ -84,7 +66,7 @@ export class BackendInterceptorService implements HttpInterceptor {
         // validation
         let duplicateEmailUser = users.filter(user => { return user.email === newUser.email; }).length;
         if (duplicateEmailUser) {
-          return throwError({ error: { message: 'email "' + newUser.email + '" is already taken' } });
+          return throwError({ error: { message: 'email ' + newUser.email + ' is already taken' } });
         }
 
         // save new user
@@ -96,19 +78,13 @@ export class BackendInterceptorService implements HttpInterceptor {
         request = request.clone({
           url: `${environment.apiUrl}/users/`
         })
-        return next.handle(request).do((event: HttpEvent<any>) => {
-          if (event instanceof HttpResponse) {
-            return of(new HttpResponse({ status: 200 }));
-          }
-        }, (err: any) => {
-          if (err instanceof HttpErrorResponse) {
-            return throwError({ error: { message: 'Username "' + newUser.username + '" is already taken' } });
-          }
-        });
-      }
+        return next.handle(request).pipe(map(event => {
+          return event;
+        }));
+      }  
 
       if(request.url.endsWith('/students/onBoard') && request.method === 'POST'){
-        debugger
+       if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
          let newStudent = request.body;
          let duplicateStudent =   students.filter(student => { return student.onBoardNumber === newStudent.onBoardNumber; }).length;
         if (duplicateStudent) {
@@ -125,19 +101,14 @@ export class BackendInterceptorService implements HttpInterceptor {
           url: `${environment.apiUrl}/students/`
         })
 
-         return next.handle(request).do((event: HttpEvent<any>) => {
-          if (event instanceof HttpResponse) {
-            return of(new HttpResponse({ status: 200 }));
-          }
-        }, (err: any) => {
-          if (err instanceof HttpErrorResponse) {
-            return throwError({ error: { message: 'OnBoardNumber "' + newStudent.onBoardNumber + '" is already taken' } });
-          }
-        });       
-      }
-
-
-
+         return next.handle(request).pipe(map(event => {
+               return event;
+         }));
+       }
+       else{
+          return throwError({ status: 401, error: { message: 'Unauthorised' } });
+       }   
+      }  
 
       // pass through any requests not handled above
       return next.handle(request);

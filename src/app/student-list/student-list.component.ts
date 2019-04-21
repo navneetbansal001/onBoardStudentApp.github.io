@@ -1,3 +1,4 @@
+import { AlertService } from './../services/alert.service';
 import { Router } from '@angular/router';
 import { Student } from './../models/Student';
 import { StudentService } from './../services/student.service';
@@ -18,7 +19,8 @@ export class StudentListComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private studentService: StudentService,
-    private router: Router) {
+    private router: Router,
+    private alertService: AlertService) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
@@ -94,11 +96,14 @@ export class StudentListComponent implements OnInit {
 
   onDelete(id: number): void {
     this.studentService.getStudents().subscribe(
-      students => {
+      (students: any) => {
         this.students = students;
         this.filteredStudents = students;
       },
-      error => this.errorMessage = <any>error
+      (error: any) => {
+        this.alertService.error(error.error.message);
+        this.errorMessage = <any>error
+      }
     );
   }
 

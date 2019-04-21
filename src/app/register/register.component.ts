@@ -32,7 +32,7 @@ function emailMatcher(c: AbstractControl): { [key: string]: boolean } | null {
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  currentUser : any;
+  currentUser: any;
   loading = false;
   submitted = false;
   userForm: FormGroup;
@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private alertService: AlertService) {
-     }
+  }
 
   get addresses(): FormArray {
     return <FormArray>this.userForm.get('addresses'); // cast from AbstarctControl to FormArray
@@ -85,12 +85,18 @@ export class RegisterComponent implements OnInit {
     this.user.password = this.userForm.get('password').value;
 
     this.userService.register(this.user).pipe(first()).subscribe(
-      data => {
-        this.alertService.success('Registration is successful', true);
-        this.router.navigate(['/login']);
+      (data: any) => {
+        if (data && data.id) {
+          this.alertService.success('Registration is successful', true);
+          this.router.navigate(['/login']);
+        }
+        else {
+          this.alertService.error("SignUp not successfull");
+          this.loading = false;
+        }
       },
-      error => {
-        this.alertService.error(error);
+      (error : any) => {
+        this.alertService.error(error.error.message);
         this.loading = false;
       }
     );

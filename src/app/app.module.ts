@@ -1,3 +1,4 @@
+import { TokeninterceptorService } from './interceptors/tokeninterceptor.service';
 import { fakeBackendProvider } from './interceptors/backend-interceptor.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -11,6 +12,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { HomeComponent } from './home/home.component';
 import { OnboardingformComponent } from './onboardingform/onboardingform.component';
 import { StudentListComponent } from './student-list/student-list.component';
+import { AlertComponent } from './directives/alert.component';
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -19,7 +22,8 @@ import { StudentListComponent } from './student-list/student-list.component';
     LoginComponent,
     HomeComponent,
     OnboardingformComponent,
-    StudentListComponent
+    StudentListComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +32,7 @@ import { StudentListComponent } from './student-list/student-list.component';
     HttpClientModule
   ],
   providers: [
+     { provide: HTTP_INTERCEPTORS, useClass: TokeninterceptorService, multi: true },
     fakeBackendProvider
   ],
   

@@ -1,3 +1,4 @@
+import { AlertService } from './../services/alert.service';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { first } from 'rxjs/operators';
@@ -28,7 +29,8 @@ export class OnboardingformComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private studentService: StudentService,
     private router: Router,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute,
+    private alertService : AlertService) {
       this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
 
@@ -149,10 +151,19 @@ export class OnboardingformComponent implements OnInit {
 
     this.studentService.onBoard(this.student).
       pipe(first()).subscribe(
-      data => {
+      (data:any) => {
+        if(data && data.id){
         this.router.navigate(['/studentlist']);
+        this.alertService.success("student onboard is successful");
+        this.loading = false;
+      }
+      else{
+        this.alertService.error("student onboard is not successful");
+        this.loading = false;
+      }
       },
-      error => {
+      (error:any) => {
+         this.alertService.error(error.error.message);
         this.loading = false;
       })
   }

@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { User } from 'src/app/models/User';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
@@ -15,7 +16,10 @@ export class UserService {
   constructor(private httpClient : HttpClient) { }
 
   register (user : User){
-   return this.httpClient.post(`${environment.apiUrl}/users/reg`,user);
+   return this.httpClient.post(`${environment.apiUrl}/users/reg`,user).pipe(map((responseBody : any)=>{
+      console.log(responseBody)
+        return responseBody;
+   }));
   }
 
   getAllUsers() {
