@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy" : "ng build --prod --base-href https://navneetbansal001.github.com/onBoardStudentApp.github.io/ && angular-cli-ghpages --dir dist/StudentOnBoardApplication --branch gh-pages"
+    "deploy" : "ng build --prod --base-href https://navneetbansal001.github.com/onBoardStudentApp.github.io/ && angular-cli-ghpage --branch gh-pages"
   },
   "private": true,
   "dependencies": {
