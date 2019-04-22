@@ -106,5 +106,8 @@ export class StudentListComponent implements OnInit {
       }
     );
   }
+  save(){
+    //do nothing
+  }
 
 }
